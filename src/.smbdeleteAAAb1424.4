@@ -1,0 +1,251 @@
+import { useState, useEffect } from "react";
+
+/*
+  MONTGOMERY COINS — design tokens
+  Palette:
+    felt      #1E3A2F  (dealer display-tray green)
+    feltDeep  #142921
+    silver    #C9CCD1
+    gold      #C9A24B
+    cream     #F0EADB  (2x2 coin flip cardboard)
+    inkBrown  #3A2F23
+  Type:
+    Display — Cinzel (Trajan-style inscriptional caps, i.e. coin lettering)
+    Body    — Source Sans 3
+    Utility — IBM Plex Mono (dates, prices, mint marks)
+  Signature: hero rendered as a giant coin obverse — reeded rim, legend text,
+  mint date — sitting on the felt tray.
+*/
+
+const inventory = [
+  { name: "1881-S Morgan Dollar", grade: "MS-64", price: 165, tag: "SILVER", note: "Frosty white luster, sharp strike" },
+  { name: "1923 Peace Dollar", grade: "MS-63", price: 98, tag: "SILVER", note: "Original skin, light golden tone" },
+  { name: "1909-VDB Lincoln Cent", grade: "AU-58", price: 42, tag: "KEY DATE", note: "Full designer initials" },
+  { name: "1964 Kennedy Half", grade: "BU", price: 18, tag: "90% SILVER", note: "First-year issue, blast white" },
+  { name: "1986 Silver Eagle", grade: "MS-69", price: 75, tag: "BULLION", note: "Inaugural year of the series" },
+  { name: "1943 Steel Cent Set", grade: "P-D-S", price: 24, tag: "WARTIME", note: "All three mints, reprocessed" },
+];
+
+const services = [
+  {
+    title: "Buying",
+    body: "Bring in single coins, inherited collections, or accumulated bullion. Offers are made on the spot, in writing, at current melt and numismatic values — no obligation to sell.",
+  },
+  {
+    title: "Selling",
+    body: "Hand-selected inventory of Morgan and Peace dollars, key-date cents, silver eagles, and type coins. Every raw coin is graded conservatively and priced against current auction results.",
+  },
+  {
+    title: "Appraisals",
+    body: "Written appraisals for estates, insurance, and division of collections. You'll leave knowing exactly what you have, what it's worth, and what your options are.",
+  },
+];
+
+export default function MontgomeryCoins() {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setLoaded(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  return (
+    <div style={{ background: "#1E3A2F", color: "#C9CCD1", minHeight: "100vh", fontFamily: "'Source Sans 3', 'Source Sans Pro', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        * { box-sizing: border-box; margin: 0; }
+        html { scroll-behavior: smooth; }
+        .mc-nav a { color: #C9CCD1; text-decoration: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.14em; }
+        .mc-nav a:hover, .mc-nav a:focus-visible { color: #C9A24B; }
+        a:focus-visible, button:focus-visible { outline: 2px solid #C9A24B; outline-offset: 3px; }
+        .coin-hero {
+          transition: transform 1.4s cubic-bezier(.2,.8,.2,1), opacity 1.2s ease;
+        }
+        .flip-card { transition: transform .25s ease, box-shadow .25s ease; }
+        .flip-card:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(0,0,0,.35); }
+        @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto; }
+          .coin-hero, .flip-card { transition: none !important; }
+        }
+        @media (max-width: 760px) {
+          .mc-grid3 { grid-template-columns: 1fr !important; }
+          .mc-grid-inv { grid-template-columns: 1fr 1fr !important; }
+          .mc-hero-wrap { flex-direction: column !important; text-align: center; }
+        }
+        @media (max-width: 480px) {
+          .mc-grid-inv { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+
+      {/* NAV */}
+      <nav className="mc-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 6vw", borderBottom: "1px solid rgba(201,204,209,.15)" }}>
+        <span style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 18, letterSpacing: "0.12em", color: "#C9A24B" }}>
+          MC
+        </span>
+        <div style={{ display: "flex", gap: 28 }}>
+          <a href="#inventory">INVENTORY</a>
+          <a href="#services">SERVICES</a>
+          <a href="#visit">VISIT</a>
+        </div>
+      </nav>
+
+      {/* HERO — the coin */}
+      <header className="mc-hero-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6vw", padding: "8vh 6vw 10vh", flexWrap: "wrap" }}>
+        <div
+          className="coin-hero"
+          aria-hidden="true"
+          style={{
+            width: "min(340px, 74vw)",
+            height: "min(340px, 74vw)",
+            borderRadius: "50%",
+            border: "3px dashed #C9A24B", /* reeded edge */
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            padding: 34,
+            background: "radial-gradient(circle at 35% 30%, #24463a 0%, #142921 78%)",
+            boxShadow: "0 24px 60px rgba(0,0,0,.45), inset 0 0 0 10px rgba(201,162,75,.12)",
+            transform: loaded ? "rotate(0deg) scale(1)" : "rotate(-14deg) scale(.92)",
+            opacity: loaded ? 1 : 0,
+            flexShrink: 0,
+          }}
+        >
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: "0.32em", color: "#C9A24B" }}>
+            ✦ MONTGOMERY · TEXAS ✦
+          </span>
+          <span style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: "clamp(26px, 5vw, 40px)", letterSpacing: "0.08em", color: "#E8E4D6", textAlign: "center", lineHeight: 1.15 }}>
+            MONTGOMERY<br />COINS
+          </span>
+          <span style={{ fontFamily: "'Cinzel', serif", fontSize: 13, letterSpacing: "0.3em", color: "#C9CCD1" }}>
+            IN LIBERTY WE TRADE
+          </span>
+          <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 13, letterSpacing: "0.24em", color: "#C9A24B" }}>
+            EST · 2024
+          </span>
+        </div>
+
+        <div style={{ maxWidth: 460 }}>
+          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, letterSpacing: "0.2em", color: "#C9A24B", marginBottom: 14 }}>
+            LOCAL DEALER · BUY / SELL / APPRAISE
+          </p>
+          <h1 style={{ fontFamily: "'Cinzel', serif", fontWeight: 500, fontSize: "clamp(24px, 3.4vw, 34px)", color: "#E8E4D6", lineHeight: 1.3, marginBottom: 18 }}>
+            Honest grades. Fair prices. Real coins in hand.
+          </h1>
+          <p style={{ fontSize: 16, lineHeight: 1.65, marginBottom: 26 }}>
+            Montgomery Coins is a local numismatic shop serving Montgomery and the greater Lake Conroe area.
+            Morgan dollars, key dates, silver and gold bullion — every piece graded conservatively and priced against the market, not the sticker.
+          </p>
+          <a
+            href="#inventory"
+            style={{
+              display: "inline-block",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 13,
+              letterSpacing: "0.14em",
+              color: "#142921",
+              background: "#C9A24B",
+              padding: "13px 26px",
+              textDecoration: "none",
+              fontWeight: 500,
+            }}
+          >
+            BROWSE THE TRAY →
+          </a>
+        </div>
+      </header>
+
+      {/* INVENTORY — 2x2 flip cards */}
+      <section id="inventory" style={{ background: "#142921", padding: "9vh 6vw" }}>
+        <h2 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 24, letterSpacing: "0.14em", color: "#C9A24B", marginBottom: 6 }}>
+          FROM THE CASE
+        </h2>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 12, letterSpacing: "0.12em", color: "#8FA398", marginBottom: 40 }}>
+          Inventory rotates weekly — call to confirm availability
+        </p>
+
+        <div className="mc-grid-inv" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 26 }}>
+          {inventory.map((c) => (
+            <article
+              key={c.name}
+              className="flip-card"
+              style={{ background: "#F0EADB", color: "#3A2F23", padding: "22px 20px 18px", position: "relative" }}
+            >
+              {/* staple marks — like a real 2x2 flip */}
+              <span aria-hidden="true" style={{ position: "absolute", top: 10, left: 16, width: 14, height: 3, background: "#B9AE97" }} />
+              <span aria-hidden="true" style={{ position: "absolute", top: 10, right: 16, width: 14, height: 3, background: "#B9AE97" }} />
+
+              {/* coin window */}
+              <div
+                aria-hidden="true"
+                style={{
+                  width: 92,
+                  height: 92,
+                  borderRadius: "50%",
+                  margin: "10px auto 16px",
+                  background: "radial-gradient(circle at 34% 30%, #E4E6EA 0%, #A9ADB4 60%, #7E838B 100%)",
+                  border: "6px solid #DDD3BE",
+                  boxShadow: "inset 0 2px 6px rgba(0,0,0,.25)",
+                }}
+              />
+              <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, letterSpacing: "0.2em", color: "#8A7A5C", textAlign: "center", marginBottom: 6 }}>
+                {c.tag}
+              </p>
+              <h3 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 16, textAlign: "center", lineHeight: 1.3, marginBottom: 6 }}>
+                {c.name}
+              </h3>
+              <p style={{ fontSize: 13.5, textAlign: "center", color: "#5C503D", marginBottom: 14 }}>{c.note}</p>
+              <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #D8CDB4", paddingTop: 10, fontFamily: "'IBM Plex Mono', monospace", fontSize: 13 }}>
+                <span>{c.grade}</span>
+                <span style={{ fontWeight: 500 }}>${c.price}</span>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* SERVICES */}
+      <section id="services" style={{ padding: "9vh 6vw" }}>
+        <h2 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 24, letterSpacing: "0.14em", color: "#C9A24B", marginBottom: 40 }}>
+          WHAT WE DO
+        </h2>
+        <div className="mc-grid3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 32 }}>
+          {services.map((s) => (
+            <div key={s.title} style={{ borderTop: "2px solid #C9A24B", paddingTop: 18 }}>
+              <h3 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 18, letterSpacing: "0.1em", color: "#E8E4D6", marginBottom: 12 }}>
+                {s.title.toUpperCase()}
+              </h3>
+              <p style={{ fontSize: 15, lineHeight: 1.65 }}>{s.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* VISIT */}
+      <section id="visit" style={{ background: "#142921", padding: "9vh 6vw" }}>
+        <div style={{ maxWidth: 640 }}>
+          <h2 style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 24, letterSpacing: "0.14em", color: "#C9A24B", marginBottom: 18 }}>
+            VISIT THE SHOP
+          </h2>
+          <p style={{ fontSize: 16, lineHeight: 1.7, marginBottom: 26 }}>
+            Based in Montgomery, TX. Buying and appraisal visits are by appointment —
+            reach out and we'll set a time that works. Serious collections are always worth the trip.
+          </p>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 14, lineHeight: 2.1 }}>
+            <p><span style={{ color: "#C9A24B" }}>LOC ·</span> Montgomery, Texas</p>
+            <p><span style={{ color: "#C9A24B" }}>TEL ·</span> (936) 203-2882</p>
+            <p><span style={{ color: "#C9A24B" }}>EML ·</span> sales@montgomerycoins.com</p>
+            <p><span style={{ color: "#C9A24B" }}>HRS ·</span> By appointment · Weekends preferred</p>
+          </div>
+        </div>
+      </section>
+
+      <footer style={{ padding: "26px 6vw", borderTop: "1px solid rgba(201,204,209,.15)", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 10 }}>
+        <span style={{ fontFamily: "'Cinzel', serif", fontSize: 13, letterSpacing: "0.14em", color: "#C9A24B" }}>MONTGOMERY COINS</span>
+        <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, letterSpacing: "0.12em", color: "#8FA398" }}>
+          PRICES REFLECT CURRENT MARKET · ALL COINS GUARANTEED GENUINE
+        </span>
+      </footer>
+    </div>
+  );
+}
